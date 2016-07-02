@@ -1,0 +1,180 @@
+\documentclass[spanish, a4paper, 12pt, final, slideColor, nototal, colorBG, pdf, noaccumulate, darkblue] {beamer}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{latexsym}
+\usepackage{mathtools}
+\usepackage{anysize}
+%\marginsize{2cm}{2cm}{2cm}{3cm}
+\usepackage{mathtools}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\newcommand\eqdef{\stackrel{\mathclap{\mbox{\tiny{def}}}}{=}}
+\newcommand\eqac{\stackrel{\mathclap{\mbox{*}}}{=}}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{verbatim}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+\usetheme{Madrid}
+
+\title{Introducción al $\lambda$-cálculo}
+\subtitle{Otro camino en la resolución de problemas}
+\author{Marco Antonio Garrido Rojo}
+\date{4 de julio de 2016}
+
+\begin{document}
+\maketitle
+\begin{frame}
+    \frametitle{Un poco de historia}
+    \begin{itemize}
+        \item Desde los tiempos de Leibniz se intentó conseguir la creación de un lenguaje universal para formular todos los problemas posibles y un método de decisíon para resolverlos (en caso de existir).
+        \item Lo primero se consiguió con la lógica de primer orden, mientras que para lo segundo tuvimos que esperar hasta el año 1936 para obtener como respuesta un no.
+        \item Alan Turing inventó las máquinas de Turing mientras que Alonzo Church inventó un sistema formal llamado $\lambda$-cálculo. Posteriormente, Turing demostró que ambos métodos definían la misma noción de computabilidad.
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Un poco de historia}
+    \begin{itemize}
+        \item Las máquinas de Turing inspiraron el diseño de nuestros actuales ordenadores con arquitectura Von Neumann y los lenguajes de programación imperativos.
+        \item Los lenguajes funcionales, por otro lado, se basan en el $\lambda$-cálculo, al igual que lo hacen las máquinas de reducción, diseñadas para la ejecución de este tipo de programas.
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{¿Qué es esto del $\lambda$-cálculo?}
+    Es un sistema formal basado en funciones que expresan los datos y los algoritmos que se aplican sobre estos. Se apoya en los principios de:
+    \begin{itemize}
+        \item {\textbf{Redución: } reemplazar una parte $P$ de $E$ por otra expresión $P'$ con el fin de simplificar. Cuando no puede aplicarse más veces este proceso a una expresión se dice que se ha alcanzado la forma normal $E^*$ de $E$.}
+        \item {\textbf{Aplicación: } $F\cdot A$. Emplear $A$ como entrada del algoritmo $F$. Al no existir tipos en esta noción una función puede aplicarse a sí misma.}
+        \item {\textbf{Abstracción: } Dada una expresión $M[x]$, $\lambda x.M[x]$ denota una aplicación en la que a cada $N$ le asigna el resultado de $(\lambda x.M[x])N = M[x := N]$.} %OJO Variables libres
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{¿Qué es esto del $\lambda$-cálculo?}
+    Definimos el conjunto de los $\lambda$-términos ($\Lambda$) de forma recursiva sobre un conjunto $V$ de variables infinito:
+    \begin{itemize}
+        \item $x \in V \Rightarrow x \in \Lambda$
+        \item $M, N \in \Lambda \Rightarrow (MN)\in \Lambda$
+        \item $M \in \Lambda, x \in V \Rightarrow \lambda x.M \in \Lambda$
+    \end{itemize}
+    De forma similar se puede definir el conjunto de variables libres de una expresión $M$ ($FV(M)$) como:
+    \begin{itemize}
+        \item $FV(x) = \{x\}$
+        \item $FV(MN) = FV(M) \cup FV(N)$
+        \item $FV(\lambda x.M) = FV(M) - {x}$
+    \end{itemize}%OJO: Convenio de variables
+    Una expresión sin variables libres es una \textbf{expresión cerrada}.
+\end{frame}
+\begin{frame}
+    \frametitle{¿Qué es esto del $\lambda$-cálculo?}
+    Algunos axiomas y reglas:
+    \begin{itemize}
+        \item \textbf{Axioma principal del $\lambda$-cálculo: }$(\lambda x.M[x])N = M[x := N]$
+        \item \textbf{Igualdad: }
+        \begin{itemize}
+            \item $M = M$
+            \item $M = N \Rightarrow N = M$
+            \item $M = N, N = L \Rightarrow M = L$
+        \end{itemize}
+        \item \textbf{Reglas de compatibilidad: } Si $M = M'$ tenemos que:
+        \begin{itemize}
+            \item $MZ = M'Z$
+            \item $ZM = ZM'$
+            \item $\lambda x.M = \lambda x.M'$
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{¿Qué podemos hacer con el $\lambda$-cálculo?}
+    \textbf{Algunos operadores conocidos:}
+    \begin{itemize}
+        \item $I \equiv \lambda x.x$
+        \item $K \equiv \lambda xy.x$
+        \item $K_* \equiv \lambda xy.y$
+        \item $S \equiv \lambda xyz.xz(yz)$
+    \end{itemize}
+    \textbf{Teorema del punto fijo: }$\forall F, \exists X / FX = X$, en concreto tenemos que $F(YF) = YF$ donde $Y = \lambda f.(\lambda x.f(xx))(\lambda x.f(xx))$
+\end{frame}
+\begin{frame}
+    \frametitle{¿Qué podemos hacer con el $\lambda$-cálculo?}
+    \textbf{Numerales de Church:}
+    Definiendo $F^n(M)$ de forma recursiva como:
+    \begin{itemize}
+        \item $F^0(M) \equiv M$
+        \item $F^{n+1}(M) \equiv F(F^n(M))$
+    \end{itemize}
+    definimos los numerales de Church como $c_n = \lambda fx.f^n(x)$ y los operadores
+    \begin{itemize}
+        \item $A_+ \equiv \lambda xypq.xp(ypq)$
+        \item $A_* \equiv \lambda xyz.x(yz)$
+        \item $A_{exp} \equiv \lambda xy.yx$
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{¿Qué podemos hacer con el $\lambda$-cálculo?}
+    ¿Qué hay de los booleanos? Definámoslos:
+    \begin{itemize}
+        \item $True \equiv K$
+        \item $False \equiv K_*$
+    \end{itemize}
+    La expresión if $B$ then $P$ else $Q$ queda ahora de la forma $BPQ$.
+    Utilizaremos por comodidad la notación $[M,N] = \lambda z.zMN$ de modo que:
+    \begin{itemize}
+        \item $[M,N]True = M$
+        \item $[M,N]False = N$
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{¿Qué podemos hacer con el $\lambda$-cálculo?}
+    Una alternativa a los numerales de Church:
+    \begin{itemize}
+        \item $\ceil{0} \equiv I$
+        \item $\ceil{n+1} \equiv [False, \ceil{n}]$
+    \end{itemize}
+    Con los siguientes operadores:
+    \begin{itemize}
+        \item $S^{+} \equiv \lambda x.[False, x]$
+        \item $P^{-} \equiv \lambda x.xFalse$
+        \item $Zero \equiv \lambda x.xTrue$
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Hablemos de computación}
+    Una función $\varphi$ es $\lambda$-definible si existe un operador $F$ tal que $F\ceil{n_1}\ldots\ceil{n_p} = \ceil{\varphi(n_1\ldots n_p)}$. Las funciones anteriores junto con las proyecciones son $\lambda$-definibles.\\
+    Decimos que una clase de funciones $\mathcal{A}$ es:
+    \begin{itemize}
+        \item \textbf{Cerrada bajo composición} si dada $\varphi(n) = \chi(\psi_1(n),\ldots, \psi_m(n))$ donde $\chi, \psi_i \in \cal{A}$, se tiene que $\varphi \in \cal{A}$.
+        \item \textbf{Cerrada bajo recursión} si dada $\varphi(0, n) = \chi(n)$ y $\varphi(k+1, n) = \psi(\varphi(k, n), k, n)$ donde $\chi, \psi \in \cal{A}$, se tiene $\varphi \in \cal{A}$.
+        \item \textbf{Cerrada bajo la condición de mínimo} si dada $\varphi(n) = \mu m[\chi(n, m) = 0]$ con $\chi \in \cal{A}$ tal que $\forall n \exists m \chi(n, m) = 0$, se tiene $\varphi \in \cal{A}$.
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Hablemos de computación}
+    La clase $\mathcal{R}$ de las funciones recursivas es la clase más pequeña que contiene a los operadores iniciales y que es cerrada bajo composición, recursión y la condición de mínimo. Teniendo que las funciones iniciales son $\lambda$-definibles y que toda función $\lambda$-definible es cerrada respecto a las condiciones anteriores se tiene que toda función recursiva es $\lambda$-definible por construcción.
+\end{frame}
+\begin{frame}
+    \frametitle{Hablemos de computación}
+    ¿Qué pasa con los numerales de Church?\\
+    No hay problema porque podemos convertirlos a la notación alternativa (y viceversa) mediante
+    \begin{itemize}
+        \item $T \equiv \lambda x.xS^{+}\ceil{0}$
+        \item $T^{-1} \equiv \lambda x.[c_0, S^{+}_c (T^{-1}(P^{-}x))]Zero \ceil{x}$
+    \end{itemize}
+    donde definimos
+    \begin{itemize}
+        \item $S^{+}_c \equiv \lambda xyz.y(xyz)$
+        \item $P^{-}_c \equiv \lambda xyz.x(\lambda pq.q(py))(Kz)I$
+        \item $Zero_c \equiv \lambda x.x(K False)True$
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Alguna curiosidad más}
+    \begin{itemize}
+        \item Originalmente, la teoría del $\lambda$-cálculo no contaba con tipos. Una ampliación al respecto se debe a Curry que incorporó la noción de tipo a la teoría.
+        \item Aunque ya sepamos que toda función computable se puede expresar con $\lambda$-términos, existe una versión extendida que admite constantes para facilitar el manejo de ciertas operaciones. Mediante una nueva regla de reducción ($\delta$) aportamos significado a dichas constantes.
+    \end{itemize}
+\end{frame}
+\end{document}
