@@ -8,6 +8,7 @@
 \usepackage{mathtools}
 \usepackage{anysize}
 %\marginsize{2cm}{2cm}{2cm}{3cm}
+\usepackage{soul}
 \usepackage{mathtools}
 \DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
 \newcommand\eqdef{\stackrel{\mathclap{\mbox{\tiny{def}}}}{=}}
@@ -162,7 +163,7 @@
     ¿Qué pasa con los numerales de Church?\\
     \begin{itemize}
         \item Previamente los hemos definido como un método de numeración pero en la definición de $\lambda$-definible no se emplean.
-        \item Es conveniente ver que ambas notaciones son equivalentes y para ello se emplean las funciones.
+        \item Es conveniente ver que ambas notaciones son equivalentes y para ello se emplean las funciones
         \begin{itemize}
             \item $T \equiv \lambda x.xS^{+}\ceil{0}$
             \item $T^{-1} \equiv \lambda x.[c_0, S^{+}_c (T^{-1}(P^{-}x))]Zero \ceil{x}$
@@ -181,6 +182,58 @@
     \begin{itemize}
         \item Originalmente, la teoría del $\lambda$-cálculo no contaba con tipos. Una ampliación al respecto se debe a Curry que incorporó la noción de tipo a la teoría.
         \item Aunque ya sepamos que toda función computable se puede expresar con $\lambda$-términos, existe una versión extendida que admite constantes para facilitar el manejo de ciertas operaciones. Mediante una nueva regla de reducción ($\delta$) aportamos significado a dichas constantes.
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Alguna curiosidad más sobre el $\lambda$-cálculo con tipos}
+    \begin{itemize}
+
+
+    \item Definimos el conjunto $\mathbb{T}$ de tipos sobre el conjunto $\mathbb{V}$ de variables de tipo y $\mathbb{B}$ con ``tipos constantes'' como:
+    \begin{itemize}
+        \item $\alpha \in \mathbb{V} \Rightarrow \alpha \in \mathbb{T}$
+        \item $B \in \mathbb{B} \Rightarrow B \in \mathbb{T}$
+        \item $\sigma, \tau \in \mathbb{T} \Rightarrow (\sigma \rightarrow \tau) \in \mathbb{T}$
+    \end{itemize}
+    \item Usaremos la notación $M:\sigma$ para asignar $M$ al tipo $\sigma$. Una base $\Gamma$ será un conjunto de asignaciones.
+    \item La derivación de un tipo se sigue de las siguientes reglas, asumiendo $x:\sigma$:
+    \begin{itemize}
+        \item $M:\sigma \rightarrow \tau, N:\sigma \Rightarrow MN:\tau$
+        \item \textst{$x:\sigma$}$, M:\tau \Rightarrow \lambda x.M:\sigma \rightarrow \tau$
+    \end{itemize}
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Alguna curiosidad más sobre el $\lambda$-cálculo con tipos}
+    \begin{itemize}
+        \item A partir de un $\Gamma$ (que puede ser vacio) decimos que $\Gamma \vdash M:\sigma$ si hay una derivación en la que toda asignación no cancelada está en $\Gamma$.
+        \item Lema de generación:
+        \begin{itemize}
+            \item $\Gamma \vdash x:\sigma \Rightarrow (x:\sigma)\in \Gamma$
+            \item $\Gamma \vdash MN:\tau \Rightarrow \exists \sigma /\Gamma \vdash M:(\sigma \rightarrow \tau) \wedge \Gamma \vdash N : \sigma$
+            \item $\Gamma \vdash \lambda x.M:\rho \Rightarrow \exists \sigma, \tau / \Gamma \cup \{x:\sigma \} \vdash M:\tau \wedge \rho \equiv (\sigma \rightarrow \tau)$
+        \end{itemize}
+        \item Lema de substitución:
+        \begin{itemize}
+            \item $\Gamma \vdash M:\sigma \Rightarrow \Gamma[\alpha:=\tau] \vdash M:\sigma[\alpha:=\tau]$
+            \item Si $\Gamma \cup \{x:\sigma \} \vdash M:\tau$ y $\Gamma \vdash N:\sigma$, entonces $\Gamma \vdash M[x:=N]:\tau$
+        \end{itemize}
+        \item Tipado de los subtérminos: Si $M$ tiene un tipo, todo subtérmino de $M$ también tiene un tipo.
+        \item Teorema de reducción: Si $M$ es reducible a $M'$ mediante la aplicación de la regla $\beta$, ambos términos tienen el mismo tipo.
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Alguna curiosidad más sobre la normalización}
+    \begin{itemize}
+        \item A partir de las herramientas antes discutidas podemos llegar a un resultado importante de la teoría del $\lambda$-cálculo.
+        \item Mientras que en el $\lambda$-cálculo sin tipos podemos encontrar expresiones del estilo $(\lambda x.xx)(\lambda x.xx)$, estas resultan imposibles de concebir en la teoría con tipos.
+        \item El $\lambda$-cálculo con tipos resulta fuertemente normalizable, lo que quiere decir que toda expresión tiene una forma normal alcanzable en un número finito de pasos sea cual sea el camino escogido. (¿Alguien ve el problema que tenemos con la Turing completitud?)
+    \end{itemize}
+\end{frame}
+\begin{frame}
+    \frametitle{Alguna curiosidad más sobre la normalización}
+    \begin{itemize}
+        \item Al menos podemos conformarnos con que el $\lambda$-cálculo cumple el teorema de Church–Rosser que nos dice que el orden en que tomemos las transformaciones no afecta al resultado final, es decir, se da el resultado de confluencia.
     \end{itemize}
 \end{frame}
 \end{document}
