@@ -24,7 +24,7 @@
 
 \title{Introducción al $\lambda$-cálculo}
 \subtitle{Otro camino en la resolución de problemas}
-\author{Marco Antonio Garrido Rojo}
+\author{Marco Antonio Garrido Rojo\thanks{\url{https://github.com/MaSteve/lambda-calculo}}}
 \date{4 de julio de 2016}
 
 \begin{document}
@@ -65,7 +65,7 @@
     \begin{itemize}
         \item $FV(x) = \{x\}$
         \item $FV(MN) = FV(M) \cup FV(N)$
-        \item $FV(\lambda x.M) = FV(M) - {x}$
+        \item $FV(\lambda x.M) = FV(M) - \{x\}$
     \end{itemize}%OJO: Convenio de variables
     Una expresión sin variables libres es una \textbf{expresión cerrada}.
 \end{frame}
